@@ -45,7 +45,7 @@ struct EventCalendar: UIViewRepresentable {
             if fetchedTasks.isEmpty {
                 return nil
             }
-            return .image(UIImage(systemName: "circle.fill"), color: UIColor( priorityColor(fetchedTasks[0].priority!)), size: .medium)
+            return .image(UIImage(systemName: "circle.fill"), color: UIColor( Priority.priorityColor(fetchedTasks[0].priority!)), size: .medium)
         }
     }
 }

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CalendarView: View {
     
-    @FetchRequest(entity: Task.entity(), sortDescriptors: [NSSortDescriptor(key: "dateCreated", ascending: false)]) private var allTask: FetchedResults<Task>
+    @FetchRequest(entity: Task.entity(), sortDescriptors: [NSSortDescriptor(key: "completionDate", ascending: false)]) private var allTask: FetchedResults<Task>
     @StateObject var viewModel = AllTasks()
     
     var body: some View {

@@ -11,7 +11,7 @@ struct AllTasksView: View {
     
     @StateObject var viewModel = AllTasks()
 
-    @FetchRequest(entity: Task.entity(), sortDescriptors: [NSSortDescriptor(key: "dateCreated", ascending: false)]) private var allTask: FetchedResults<Task>
+    @FetchRequest(entity: Task.entity(), sortDescriptors: [NSSortDescriptor(key: "completionDate", ascending: false)]) private var allTask: FetchedResults<Task>
     
     var body: some View {
         NavigationView {
@@ -20,7 +20,7 @@ struct AllTasksView: View {
                     ForEach(allTask) { task in
                         HStack{
                             Circle()
-                                .fill(priorityColor(task.priority!))
+                                .fill(Priority.priorityColor(task.priority!))
                                 .frame(width: 15, height: 15)
                             Spacer().frame(width: 20)
                             VStack(alignment: .leading) {

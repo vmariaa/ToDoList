@@ -15,20 +15,21 @@ enum Priority: String, Identifiable, CaseIterable {
     case low = "Low"
     case medium = "Medium"
     case high = "High"
-}
-
-func priorityColor(_ priority: String) -> Color {
-    let priority = Priority(rawValue: priority)
     
-    switch priority {
-    case .high:
-        return Color.red
-    case .medium:
-        return Color.yellow
-    case .low:
-        return Color.green
-    default:
-        return Color.black
+    
+   static func priorityColor(_ priority: String) -> Color {
+        let priority = Priority(rawValue: priority)
+        
+        switch priority {
+        case .high:
+            return Color.red
+        case .medium:
+            return Color.yellow
+        case .low:
+            return Color.green
+        default:
+            return Color.black
+        }
     }
 }
 
