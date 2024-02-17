@@ -28,4 +28,14 @@ final class AllTasks: ObservableObject {
         }
     }
     
+   static func changeTaskView(date: DateComponents, task: inout FetchedResults<Task>.Element?, allTask: FetchedResults<Task>) {
+        let fetchedTask = allTask
+            .filter { $0.completionDate?.startOfDay == date.date?.startOfDay }
+        if !fetchedTask.isEmpty {
+            task = fetchedTask.first
+        } else {
+            task = nil
+        }
+    }
+    
 }

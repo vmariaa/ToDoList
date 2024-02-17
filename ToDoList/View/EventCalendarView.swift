@@ -11,7 +11,6 @@ struct EventCalendar: UIViewRepresentable {
     
     let timeInterval: DateInterval
 
-    
     @Binding var displayedTask: FetchedResults<Task>.Element?
     @FetchRequest(entity: Task.entity(), sortDescriptors: [NSSortDescriptor(key: "completionDate", ascending: false)]) var allTask: FetchedResults<Task>
 
@@ -21,7 +20,6 @@ struct EventCalendar: UIViewRepresentable {
         view.calendar = Calendar(identifier: .gregorian)
         view.availableDateRange = timeInterval
         view.selectionBehavior = UICalendarSelectionSingleDate(delegate: context.coordinator)
-        
         return view
     }
     
@@ -47,7 +45,15 @@ struct EventCalendar: UIViewRepresentable {
                 dateComponents.append(dateComponent)
             }
         }
-
+        
+        if !dateComponents.isEmpty {
+            for date in dateComponents {
+                if date.date?.startOfDay == context.coordinator.selectedDate?.date?.startOfDay {
+                    AllTasks.changeTaskView(date: date, task: &context.coordinator.parent.displayedTask, allTask: allTask)
+                }
+            }
+        }
+        
         uiView.reloadDecorations(forDateComponents: dateComponents, animated: true)
         AllTasks.deletedTasks = []
         AllTasks.createdTask = []
@@ -62,6 +68,7 @@ struct EventCalendar: UIViewRepresentable {
       
         var parent: EventCalendar
         var allTask: FetchedResults<Task>
+        var selectedDate: DateComponents?
         
         
         init(parent: EventCalendar, allTask: FetchedResults<Task>) {
@@ -79,19 +86,10 @@ struct EventCalendar: UIViewRepresentable {
             return .image(UIImage(systemName: "circle.fill"), color: UIColor( Priority.priorityColor(fetchedTasks[0].priority!)), size: .medium)
         }
         
-        
-        
-        
-        
         @MainActor
         func dateSelection(_ selection: UICalendarSelectionSingleDate, didSelectDate dateComponents: DateComponents?) {
-            let fetchedTask = allTask
-                .filter { $0.completionDate?.startOfDay == dateComponents?.date?.startOfDay }
-            if !fetchedTask.isEmpty {
-                parent.displayedTask = fetchedTask.first
-            } else {
-                parent.displayedTask = nil
-            }
-        }
+            selectedDate = selection.selectedDate
+            AllTasks.changeTaskView(date: dateComponents!, task: &parent.displayedTask, allTask: allTask) }
+ 
     }
 }
