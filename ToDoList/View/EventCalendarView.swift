@@ -10,6 +10,8 @@ import SwiftUI
 struct EventCalendar: UIViewRepresentable {
     
     let timeInterval: DateInterval
+
+    
     @Binding var displayedTask: FetchedResults<Task>.Element?
     @FetchRequest(entity: Task.entity(), sortDescriptors: [NSSortDescriptor(key: "completionDate", ascending: false)]) var allTask: FetchedResults<Task>
 
@@ -24,19 +26,31 @@ struct EventCalendar: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: UICalendarView, context: Context) {
+        
         context.coordinator.allTask = allTask
         var dateComponents = [DateComponents]()
-        for task in context.coordinator.allTask {
-            var dateComponent = uiView.calendar.dateComponents(in: .current, from: task.completionDate!)
-            dateComponents.append(dateComponent)
-            
+        if !AllTasks.createdTask.isEmpty {
+            for task in AllTasks.createdTask {
+                let dateComponent = uiView.calendar.dateComponents(in: .current, from: task)
+                dateComponents.append(dateComponent)
+            }
         }
-        uiView.reloadDecorations(forDateComponents: dateComponents, animated: true)
-        print(dateComponents)
 
-        
-        
-        print(context.coordinator.allTask.count)
+        if !AllTasks.deletedTasks.isEmpty {
+            for task in AllTasks.deletedTasks {
+                var dateComponent = uiView.calendar.dateComponents(in: .current, from: task)
+                for date in dateComponents {
+                    if date.date?.startOfDay == task.startOfDay {
+                        return
+                    }
+                }
+                dateComponents.append(dateComponent)
+            }
+        }
+
+        uiView.reloadDecorations(forDateComponents: dateComponents, animated: true)
+        AllTasks.deletedTasks = []
+        AllTasks.createdTask = []
     }
     
     func makeCoordinator() -> Coordinator {
@@ -57,10 +71,8 @@ struct EventCalendar: UIViewRepresentable {
         
         @MainActor
         func calendarView(_ calendarView: UICalendarView, decorationFor dateComponents: DateComponents) -> UICalendarView.Decoration? {
-            print("all: \(allTask.count)")
             let fetchedTasks = allTask
                 .filter { $0.completionDate?.startOfDay == dateComponents.date?.startOfDay }
-            print("fetched: \(fetchedTasks.count)")
             if fetchedTasks.isEmpty {
                 return nil
             }
@@ -73,7 +85,6 @@ struct EventCalendar: UIViewRepresentable {
         
         @MainActor
         func dateSelection(_ selection: UICalendarSelectionSingleDate, didSelectDate dateComponents: DateComponents?) {
-            print("clicked")
             let fetchedTask = allTask
                 .filter { $0.completionDate?.startOfDay == dateComponents?.date?.startOfDay }
             if !fetchedTask.isEmpty {

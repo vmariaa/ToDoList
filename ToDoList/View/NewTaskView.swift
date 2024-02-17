@@ -20,6 +20,7 @@ struct NewTaskView: View {
             task.dateCreated = Date()
             task.completionDate = viewModel.date
             try CoreDataManager.shared.viewContext.save()
+            AllTasks.createdTask.append(task.completionDate!)
         } catch {
             print(error.localizedDescription)
         }

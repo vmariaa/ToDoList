@@ -10,6 +10,9 @@ import CoreData
 
 final class AllTasks: ObservableObject {
     
+    static var deletedTasks = [Date]()
+    static var createdTask = [Date]()
+    
     let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "d MMMM y"

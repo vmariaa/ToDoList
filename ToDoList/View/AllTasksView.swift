@@ -60,6 +60,7 @@ struct AllTasksView: View {
     private func delete(_ offsets: IndexSet) {
         for offset in offsets {
             let task = allTask[offset]
+            AllTasks.deletedTasks.append(task.completionDate!)
             CoreDataManager.shared.viewContext.delete(task)
         }
         try? CoreDataManager.shared.viewContext.save()
