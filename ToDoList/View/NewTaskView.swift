@@ -9,7 +9,6 @@ import SwiftUI
 
 struct NewTaskView: View {
     @StateObject var viewModel = NewTask()
-
     @Environment(\.dismiss) private var dismiss
     
     private func saveTask() {

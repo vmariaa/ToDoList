@@ -19,15 +19,6 @@ final class AllTasks: ObservableObject {
         return formatter
     }()
     
-    func doTask(_ finished: Bool) -> Image {
-        switch finished {
-        case true:
-            return Image(systemName: "checkmark.circle")
-        case false:
-            return Image(systemName: "circle")
-        }
-    }
-    
    static func changeTaskView(date: DateComponents, task: inout FetchedResults<Task>.Element?, allTask: FetchedResults<Task>) {
         let fetchedTask = allTask
             .filter { $0.completionDate?.startOfDay == date.date?.startOfDay }
@@ -37,5 +28,15 @@ final class AllTasks: ObservableObject {
             task = nil
         }
     }
+    
+    func doTask(_ finished: Bool) -> Image {
+        switch finished {
+        case true:
+            return Image(systemName: "checkmark.circle")
+        case false:
+            return Image(systemName: "circle")
+        }
+    }
+
     
 }

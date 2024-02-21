@@ -24,7 +24,6 @@ struct EventCalendar: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: UICalendarView, context: Context) {
-        
         context.coordinator.allTask = allTask
         var dateComponents = [DateComponents]()
         if !AllTasks.createdTask.isEmpty {
@@ -90,6 +89,5 @@ struct EventCalendar: UIViewRepresentable {
         func dateSelection(_ selection: UICalendarSelectionSingleDate, didSelectDate dateComponents: DateComponents?) {
             selectedDate = selection.selectedDate
             AllTasks.changeTaskView(date: dateComponents!, task: &parent.displayedTask, allTask: allTask) }
- 
     }
 }
